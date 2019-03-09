@@ -1,75 +1,77 @@
 import buble from 'rollup-plugin-buble'
 import {uglify} from 'rollup-plugin-uglify'
 import {terser} from 'rollup-plugin-terser'
+import wcbuilder from '@author.io/rollup-plugin-wcbuilder'
 
-const filename = 'author-element'
-const input = `${filename}.js`
-const name = 'AuthorElement'
+const input = './src/element.js'
+const outfile = 'author-__ELEMENT_NAME__.js'
 const outdir = './dist'
 const format = 'iife'
-const sourcemap = true
+const pkg = require('./package.json')
+const banner = `// Copyright (c) ${(new Date()).getFullYear()} ${pkg.author.name}. ${pkg.license} licensed.\n// ${pkg.name} v${pkg.version} available at ${pkg.repository.url.replace(/git\+|https:\/\/|\.git/gi, '')}\n// Last Build: ${(new Date().toLocaleString({ timeZone: 'UTC'}))}`
+
+const options = {
+	dependencies: [
+		// tag names of dependee elements
+	]
+}
+
+const output = file => {
+	return {
+		name: '__ELEMENT_CLASS-NAME__',
+		file: `${outdir}/${outfile.replace(require('path').extname(outfile), '')}${file}`,
+		format,
+		banner,
+		sourcemap: true
+	}
+}
 
 export default [
 	// Standard (Minified ES6)
 	{
 		input,
 		plugins: [
+			wcbuilder(options),
 			terser()
 		],
-		output: [{
-			name,
-			file: `${outdir}/${filename}.min.js`,
-			format,
-			sourcemap
-		}]
+		output: [
+			output('.min.js')
+		]
 	},
 
 	// Legacy (Transpiled & Minified ES5)
-	// This is only relevant to browsers.
 	{
 		input,
 		plugins: [
+			wcbuilder(options),
 			buble(),
 			uglify()
 		],
 		output: [
-			{
-				name,
-				file: `${outdir}/${filename}.es5.min.js`,
-				format,
-				sourcemap
-			}
+			output('.es5.min.js')
 		]
 	},
 
 	// Development: Standard (Unminified ES6)
 	{
 		input,
-		plugins: [],
+		plugins: [
+			wcbuilder(options)
+		],
 		output: [
-			{
-				name,
-				file: `${outdir}/${filename}.js`,
-				format,
-				sourcemap
-			},
+			output('.js')
 		]
 	},
 
 	// Development: Legacy (Transpiled & Unminified ES5)
-	// This is only relevant to browsers.
 	{
 		input,
 		plugins: [
+			wcbuilder(options),
 			buble()
 		],
 		output: [
-			{
-				name,
-				file: `${outdir}/${filename}.es5.js`,
-				format,
-				sourcemap
-			}
+			output('.es5.js')
 		]
 	}
 ]
