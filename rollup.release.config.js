@@ -1,4 +1,4 @@
-import buble from 'rollup-plugin-buble'
+import babel from 'rollup-plugin-babel'
 import {uglify} from 'rollup-plugin-uglify'
 import {terser} from 'rollup-plugin-terser'
 import wcbuilder from '@author.io/rollup-plugin-wcbuilder'
@@ -14,6 +14,10 @@ const options = {
 	dependencies: [
 		// tag names of dependee elements
 	]
+}
+
+const babelConfig = {
+	presets: [['@babel/preset-env', { modules: false }]]
 }
 
 const output = file => {
@@ -44,7 +48,7 @@ export default [
 		input,
 		plugins: [
 			wcbuilder(options),
-			buble(),
+			babel(babelConfig),
 			uglify()
 		],
 		output: [
@@ -68,7 +72,7 @@ export default [
 		input,
 		plugins: [
 			wcbuilder(options),
-			buble()
+			babel(babelConfig)
 		],
 		output: [
 			output('.es5.js')

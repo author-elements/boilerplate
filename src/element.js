@@ -1,4 +1,4 @@
-class __ELEMENT_CLASS-NAME__ extend AuthorElement(HTMLElement) {
+class __ELEMENT_CLASS-NAME__ extends AuthorBaseElement(HTMLElement) {
   constructor () {
     super(`{{TEMPLATE-STRING}}`)
   }
