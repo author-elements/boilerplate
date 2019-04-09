@@ -1,7 +1,7 @@
 @chassis init;
-@chassis include anchor buttons form-controls author-datalist;
+@chassis include anchor buttons form-controls author-__ELEMENT-NAME__;
 
-.author-datalist {
+.author-__ELEMENT-NAME__ {
   & pre {
     @chassis apply inline-block margin-bottom padding;
     background: var(--grey-n00);
